@@ -18,27 +18,28 @@ if not os.path.exists(input_dir):
 if not os.path.exists("log/"):
     os.makedirs("log/")
 
-log_filename = "run_" + str(int(time.time())) + ".log"
+log_filename = "run_dir_" + str(int(time.time())) + ".log"
 log_filepath = os.path.join("log/", log_filename)
 logging.basicConfig(filename=log_filepath, level=logging.INFO)
 logger = logging.getLogger("Transcoder")
 
-files = os.listdir(input_dir)
-num = 1
-
-def process_img(file, num):
-    imgpath = os.path.join(input_dir, file)
-    try :
-        img = Image.open(imgpath)
-        basename = os.path.splitext(file)[0] + "_"
-        newfile = basename + str(num) + ".jpg"
-        output_p = os.path.join(output_dir, newfile)
-        img.save(output_p, format="JPEG")
-        print(f"已轉換 {file} 到 {newfile}")
-        logger.info(f"Transcoded {file} to {newfile}")
-    except Exception as e:
-        print(f"轉換失敗 {file} 原因 {e}")
-        logger.error(f"Transcode Error: {e} File: {file}") 
+def process_img(root, file, num):
+        imgpath = os.path.join(root, file)
+        try :
+            img = Image.open(imgpath)
+            relpath = os.path.relpath(root, input_dir)
+            output_sdir = os.path.join(output_dir, relpath)
+            if not os.path.exists(output_sdir):
+                os.makedirs(output_sdir)
+            newfile = str(num) + ".jpg"
+            output_p = os.path.join(output_sdir, newfile)
+            img.save(output_p, format="JPEG")
+            print(f"已轉換 {file} 到 {newfile} in {relpath}")
+            logger.info(f"{file} to {newfile} in {relpath}")
+        except Exception as e:
+            relpath = os.path.relpath(root, input_dir)
+            print(f"轉換失敗 {file} in {relpath} 原因 {e}")
+            logger.error(f"{e} File: {file} in {relpath}")
 
 try :
     files = os.listdir(input_dir)
@@ -47,7 +48,7 @@ try :
         features = []
         for root, dirs, files in os.walk(input_dir):
             for file in files: 
-                features.append(executor.submit(process_img, file, num))
+                features.append(executor.submit(process_img, root, file, num))
                 num += 1
         for feature in features:
             feature.result()
