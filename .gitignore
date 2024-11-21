@@ -1,0 +1,11 @@
+# Stop env from syncing
+.env
+env
+# Legacy input/output folders
+i
+o
+# New input/output folders
+input_img
+output_img
+# Logs Folder
+log
