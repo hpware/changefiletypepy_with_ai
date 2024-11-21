@@ -7,5 +7,11 @@ o
 # New input/output folders
 input_img
 output_img
+output_yaml
 # Logs Folder
 log
+# VS Code
+.vscode
+# Pycache
+__pycache__
+.pytest_cache
