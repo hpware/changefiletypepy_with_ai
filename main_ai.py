@@ -8,6 +8,7 @@ import time
 import requests
 import torch
 import yaml
+import json
 import io
 from PIL import Image
 from concurrent.futures import ThreadPoolExecutor
@@ -73,10 +74,10 @@ def processyaml(image, model, processor, device, torch_dtype, num):
         }
     ]
 
-    newfile = str(num) + ".yaml"
+    newfile = str(num) + ".json"
     output_p = os.path.join(output_dir_yaml, newfile)
     with io.open(output_p, 'w', encoding='utf8') as outfile:
-        yaml.dump(data, outfile, default_flow_style=False, allow_unicode=True)
+        json.dump(data, outfile, default_flow_style=True, allow_unicode=True)
     print(f"已產生 {newfile}")
     logger.info(f"Generated {newfile}")
 
