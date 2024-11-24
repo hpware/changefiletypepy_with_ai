@@ -8,6 +8,7 @@ o
 input_img
 output_img
 output_yaml
+output_json
 # Logs Folder
 log
 # VS Code

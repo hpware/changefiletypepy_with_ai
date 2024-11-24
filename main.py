@@ -17,7 +17,7 @@ from transformers import AutoProcessor, AutoModelForCausalLM
 
 input_dir = "input_img/"
 output_dir = "output_img/"
-output_dir_yaml = "output_yaml/"
+output_dir_yaml = "output_json/"
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
@@ -104,9 +104,20 @@ try:
     
     print("已轉換完成")
     logger.info("Transcode Completed")
-    os.remove("filecount.txt")
-    time.sleep(1)
-    open.file("filecount.txt", "w").write(str(num))
+    if os.path.exists("filecount.txt"):
+        os.remove("filecount.txt")
+    repeat = num
+    num = 1
+    with open("filecount.txt", "w") as f:
+        f.write("[")
+        while num != repeat:
+            f.write('"'+ str(num) + '"')
+            num += 1
+            print("已寫入" + str(num))
+            if num != repeat:
+                f.write(", ")
+            else:
+                f.write("]")
     logger.info("Filecount updated")
 except KeyboardInterrupt:
     print("使用者中斷")
