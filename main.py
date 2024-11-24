@@ -27,7 +27,6 @@ if not os.path.exists("log/"):
     os.makedirs("log/")
 if not os.path.exists(output_dir_yaml): 
     os.makedirs(output_dir_yaml)
-
 log_filename = "run_dir_" + str(int(time.time())) + ".log"
 log_filepath = os.path.join("log/", log_filename)
 logging.basicConfig(filename=log_filepath, level=logging.INFO)
@@ -105,6 +104,10 @@ try:
     
     print("已轉換完成")
     logger.info("Transcode Completed")
+    os.remove("filecount.txt")
+    time.sleep(1)
+    open.file("filecount.txt", "w").write(str(num))
+    logger.info("Filecount updated")
 except KeyboardInterrupt:
     print("使用者中斷")
     logger.error("User Interrupt")
